@@ -187,7 +187,7 @@
 
       AsyncLoader.addEventListener('progress', ({ detail }) => {
         loadingAnimation.drawPath(detail.percentage)
-        document.getElementById('loading-text').innerHTML = 'Loading... ' + detail.percentage
+        document.getElementById('loading-text').innerHTML = 'Loading... ' + detail.percentage + '%'
       })
 
       AsyncLoader.addEventListener('complete', () => {
