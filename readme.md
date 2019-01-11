@@ -1,5 +1,7 @@
 # Async Loader Webpack Plugin
 
+# [DEMO](https://async-loader-webpack-plugin.tygr.info)
+
 Is your SPA getting unwieldy? Use this plugin to give immediate content to clients while loading large scripts and styles in the background.
 
 When using async-loader-webpack-plugin, an object named `AsyncLoader` is exposed which emits loading progress events. Write a loading bar in your `index.html` template file that subscribes to `AsyncLoader`. Once the scripts have been downloaded and injected and processed by the browser, `AsyncLoader` will emit a `complete` event.

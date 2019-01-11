@@ -24,7 +24,7 @@ class ProgressTracker extends EventTarget {
       lastEvent = ev.loaded
 
       if(this.initialFileLoadCountdown === 0) {
-        const percentage = Math.round(100 * (this.loaded / this.total))
+        const percentage = Math.min(100, Math.round(100 * (this.loaded / this.total)))
 
         this.dispatchEvent(new CustomEvent('progress', { detail: {
           percentage,
