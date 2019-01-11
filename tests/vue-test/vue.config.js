@@ -3,7 +3,8 @@ const AsyncLoader = require('async-loader-webpack-plugin')
 module.exports = {
   configureWebpack: {
     plugins: [ new AsyncLoader({
-      chunks: ['app', 'chunk-vendors']
+      chunks: ['app', 'chunk-vendors'],
+      files: ['map.jpg']
     }) ]
   },
   chainWebpack: config => {

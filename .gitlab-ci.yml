@@ -1,0 +1,30 @@
+image: tygrinn/yarn-compose-cypress
+
+stages:
+- build
+- test
+- release
+- clean
+
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.tygr.info
+
+variables:
+  TEST_IMAGE: registry.tygr.info/tygrinn/async-loader-webpack-plugin/vue:$CI_COMMIT_REF_NAME
+  RELEASE_IMAGE: registry.tygr.info/tygrinn/async-loader-webpack-plugin/vue:latest
+
+build:
+  stage: build
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.tygr.info
+    - docker build -t $TEST_IMAGE tests/vue-test
+    - docker push $TEST_IMAGE
+
+release:
+  stage: release
+  script:
+    - docker pull $TEST_IMAGE
+    - docker tag $TEST_IMAGE $RELEASE_IMAGE
+    - docker push $RELEASE_IMAGE
+  only:
+    - master

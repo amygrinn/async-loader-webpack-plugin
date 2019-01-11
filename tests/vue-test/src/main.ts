@@ -5,8 +5,9 @@ import store from './store';
 
 Vue.config.productionTip = false;
 
-new Vue({
+// @ts-ignore
+window['app'] = new Vue({
   router,
   store,
   render: (h) => h(App),
-}).$mount('#app');
+});

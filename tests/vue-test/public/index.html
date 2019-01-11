@@ -6,17 +6,194 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title>vue-test</title>
+    <style>
+      html {
+        width: 100%;
+        height: 100%;
+      }
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+      #loading {
+        width: 100%;
+        height: 100%;
+      }
+      #loading-info {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: lime;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      #enter-btn {
+        background: none;
+        color: green;
+        border: none;
+        font-size: 20px;
+      }
+    </style>
   </head>
   <body>
     <noscript>
       <strong>We're sorry but vue-test doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
+    <div id="loading">
+      <svg id="background-svg" height="100%" width="100%">
+        <defs>
+          <path id="path-template" stroke-width="2" stroke="black" fill="black">
+            <animate attributeName="d" dur=".3s" fill="freeze"/>
+            <animate attributeName="opacity" dur="0.3s" from="0" to="1" dur=".5s" fill="freeze" />
+          </path>
+        </defs>
+        <rect id="background-rect" fill="lime" width="100%" height="100%"/>
+      </svg>
+  
+      <div id="loading-info">
+        <h3 id="loading-text">Loading ...</h3>
+        <button id="enter-btn" onclick="enter()" style="display: none;">Enter</button>
+      </div>
+    </div>
     <div id="app"></div>
 
     <script>
-      AsyncLoader.addEventListener('progress', console.log)
-      AsyncLoader.addEventListener('complete', console.log)
+      class PathDrawer {
+
+        constructor(numSteps, numPoints) {
+          this.width = window.innerWidth
+          this.height = window.innerHeight
+
+          this.maxJointOffset = 0
+
+          this.start = Date.now()
+          this.steps = this.createSteps(numSteps, numPoints)
+          this.curStep = 0
+          this.createPathElement(el => el.setAttribute('d', this.steps[0]))
+        }
+
+        drawPath(percentage) {
+          const stepIndex = Math.round((this.steps.length - 1) * percentage / 100)
+
+          if(stepIndex !== 0 && stepIndex !== this.curStep) {
+            this.curStep = stepIndex
+
+            this.createPathElement((el) => {
+              const animation = el.firstElementChild
+              const begin = (Date.now() - this.start) / 1000
+              el.lastElementChild.setAttribute('begin', begin)
+              animation.setAttribute('begin', begin)
+              animation.setAttribute('from', this.steps[stepIndex - 1])
+              animation.setAttribute('to', this.steps[stepIndex])
+            })
+          }
+        }
+
+        createSteps(numSteps, numPoints) {
+          
+          const controlPoints = new Array(numSteps)
+          const radii = this.getRadii(numSteps, numPoints)
+
+          for(let i = 0; i < numSteps; i++) {
+            const radians = this.getRadians(numPoints)
+
+            controlPoints[i] = new Array(numPoints)
+
+            for(let j = 0; j < numPoints; j++) {
+              const x = (this.width / 2) + radii[i][j] * Math.cos(radians[j])
+              const y = (this.height / 2) + radii[i][j] * Math.sin(radians[j])
+              controlPoints[i][j] = [x,y]
+            }
+          }
+
+          const result = new Array(numSteps)
+          for(let i = 0; i < numSteps; i++) {
+            let path = 'M' + controlPoints[i][0].join(',') + ' '
+
+            for(let j = 1; j < numPoints; j++) {
+              path += 'L' + controlPoints[i][j].join(',') + ' '
+            }
+            result[i] = path
+          }
+
+          return result
+        }
+
+        getRadii(numSteps, numPoints) {
+          const finalDistance = Math.sqrt(Math.pow(this.width, 2) + Math.pow(this.height, 2)) / 2
+
+          const result = new Array(numPoints)
+          for(let i = 0; i < numPoints; i++) {
+            let radii = []
+            for(let j = 0; j < numSteps; j++) {
+              radii.push(Math.random())
+            }
+            const sum = radii.reduce((total, num) => total + num)
+            radii = radii.map(num => finalDistance * num / sum)
+
+            let total = 0
+
+            for(let j = 0; j < numSteps; j++) {
+              total += radii[j]
+              radii[j] = total
+            }
+
+            result[i] = radii
+          }
+
+          const transpose = new Array(numSteps)
+          for(let i = 0; i < numSteps; i++) {
+            transpose[i] = new Array(numPoints)
+            for(let j = 0; j < numPoints; j++) {
+              transpose[i][j] = result[j][i]
+            }
+          }
+          return transpose
+        }
+
+        getRadians(numPoints) {
+          let radians = new Array(numPoints)
+          let theta = 0
+
+          const dTheta = 2 * Math.PI / numPoints
+
+          for(let i = 0; i < numPoints; i++) {
+            radians[i] = Math.random() * dTheta + theta
+            theta += dTheta
+          }
+
+          return radians
+        }
+
+        /**
+         * @param {function} mutator - takes in the animation element for mutations before adding it to the svg
+        */
+        createPathElement(mutator = el => el) {
+          const el = document.getElementById('path-template').cloneNode(true)
+          mutator(el)
+          requestAnimationFrame(() => document.getElementById('background-svg').append(el))
+        }
+      }
+
+      const loadingAnimation = new PathDrawer(20, 15)
+
+      const enter = () => {
+        document.getElementById('loading').style.display = 'none'
+        app.$mount('#app')
+      }
+
+      AsyncLoader.addEventListener('progress', ({ detail }) => {
+        loadingAnimation.drawPath(detail.percentage)
+        document.getElementById('loading-text').innerHTML = 'Loading... ' + detail.percentage
+      })
+
+      AsyncLoader.addEventListener('complete', () => {
+        document.getElementById('enter-btn').style.display = 'block'
+        document.getElementById('background-rect').setAttribute('fill', 'black')
+      })
     </script>
-    <!-- built files will be auto injected -->
   </body>
 </html>

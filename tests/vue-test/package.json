@@ -10,10 +10,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "express": "^4.16.4",
-    "vue": "^2.5.21",
-    "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "express": "^4.16.4"
   },
   "devDependencies": {
     "@types/chai": "^4.1.0",
@@ -28,12 +25,10 @@
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
     "typescript": "^3.0.0",
+    "vue": "^2.5.21",
+    "vuex": "^3.0.1",
+    "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.5.21"
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
   },
   "browserslist": [
     "> 1%",
