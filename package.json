@@ -1,6 +1,6 @@
 {
   "name": "@tygr/async-loader-webpack-plugin",
-  "version": "1.0.0-beta",
+  "version": "1.0.1-beta",
   "description": "Get progress updates on loading js",
   "main": "dist/index.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "plugin:w": "tsc -w",
     "script": "cross-env NODE_ENV=production webpack",
     "script:w": "webpack",
-    "publish": "npm publish --access public --tag beta"
+    "pub": "npm publish --access public --tag beta"
   },
   "repository": {
     "type": "git",

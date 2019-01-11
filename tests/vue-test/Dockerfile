@@ -24,6 +24,7 @@ RUN apk add --no-cache --virtual .build-deps alpine-sdk python \
  && yarn install --production \
  && apk del .build-deps alpine-sdk python
 
+COPY . .
 COPY --from=build /app/dist ./dist
 
 CMD [ "node", "server" ]
