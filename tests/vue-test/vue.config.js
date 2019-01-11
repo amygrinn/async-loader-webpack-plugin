@@ -1,4 +1,4 @@
-const AsyncLoader = require('async-loader-webpack-plugin')
+const AsyncLoader = require('@tygr/async-loader-webpack-plugin')
 
 module.exports = {
   configureWebpack: {

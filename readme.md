@@ -6,6 +6,12 @@ When using async-loader-webpack-plugin, an object named `AsyncLoader` is exposed
 
 **This plugin is meant to be used with HtmlWebpackPlugin**
 
+## Installation
+
+`npm install --save-dev @tygr/async-loader-webpack-plugin`
+
+`yarn add --dev @tygr/async-loader-webpack-plugin`
+
 ## Plugin Options
 
 | option     | type       | default          | description                                                                                                                                                            |
@@ -33,7 +39,7 @@ You will want to edit the HtmlWebpackPlugin options to exclude the chunks you sp
 
 (webpack.config.js)
 ```
-const AsyncLoader = require('async-loader-webpack-plugin')
+const AsyncLoader = require('@tygr/async-loader-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
@@ -57,7 +63,7 @@ module.exports = {
 When using the vue CLI to create your app, you'll need to edit your webpack config in a root level file named `vue.config.js`. This configuration also modifies the 'preload' plugin that comes built in automatically. By specifying some scripts to preload, it may slow down your initial render, so it's been modified to specify `prefetch` instead.
 
 ```
-const AsyncLoader = require('async-loader-webpack-plugin')
+const AsyncLoader = require('@tygr/async-loader-webpack-plugin')
 
 module.exports = {
   configureWebpack: {

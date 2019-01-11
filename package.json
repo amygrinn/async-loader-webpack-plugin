@@ -1,6 +1,6 @@
 {
-  "name": "async-loader-webpack-plugin",
-  "version": "1.0.0",
+  "name": "@tygr/async-loader-webpack-plugin",
+  "version": "1.0.0-beta",
   "description": "Get progress updates on loading js",
   "main": "dist/index.js",
   "scripts": {
@@ -9,8 +9,14 @@
     "plugin": "tsc",
     "plugin:w": "tsc -w",
     "script": "cross-env NODE_ENV=production webpack",
-    "script:w": "webpack"
+    "script:w": "webpack",
+    "publish": "npm publish --access public --tag beta"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tylergrinn/async-loader-webpack-plugin"
+  },
+  "files": [ "dist" ],
   "author": "Tyler Grinn",
   "license": "ISC",
   "devDependencies": {
