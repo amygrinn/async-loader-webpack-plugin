@@ -43,14 +43,13 @@
       <strong>We're sorry but vue-test doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="loading">
-      <svg id="background-svg" height="100%" width="100%">
-        <defs>
-          <path id="path-template" stroke-width="2" stroke="black" fill="black">
-            <animate attributeName="d" dur=".3s" fill="freeze"/>
-            <animate attributeName="opacity" dur="0.3s" from="0" to="1" dur=".5s" fill="freeze" />
-          </path>
-        </defs>
-        <rect id="background-rect" fill="lime" width="100%" height="100%"/>
+      <svg height="100%" width="100%">
+        <rect fill="lime" width="100%" height="100%">
+          <animate id="background-animation" attributeName="fill" from="lime" to="black" begin="-1s" dur=".3s" fill="freeze"/>
+        </rect>
+        <path id="path-element" fill="black">
+          <animate id="path-animation" attributeName="d" dur=".3s" fill="freeze"/>
+        </path>
       </svg>
   
       <div id="loading-info">
@@ -66,29 +65,38 @@
         constructor(numSteps, numPoints) {
           this.width = window.innerWidth
           this.height = window.innerHeight
-
-          this.maxJointOffset = 0
-
           this.start = Date.now()
           this.steps = this.createSteps(numSteps, numPoints)
           this.curStep = 0
-          this.createPathElement(el => el.setAttribute('d', this.steps[0]))
+          this.pathEl = document.getElementById('path-element')
+          this.animation = document.getElementById('path-animation')
+
+          this.duration = 500
+
+          this.lastAnimationBegin = Date.now()
+          this.pathEl.setAttribute('d', this.steps[0])
         }
 
         drawPath(percentage) {
           const stepIndex = Math.round((this.steps.length - 1) * percentage / 100)
+          const begin = (Date.now() - this.start) / 1000
 
-          if(stepIndex !== 0 && stepIndex !== this.curStep) {
-            this.curStep = stepIndex
+          if(
+            stepIndex !== 0 
+            && stepIndex !== this.curStep 
+          ) {
+            if(Date.now() - this.lastAnimationBegin > this.duration) {
+              this.pathEl.setAttribute('d', this.steps[this.curStep])
+              this.animation.setAttribute('to', this.steps[stepIndex])
+              this.animation.setAttribute('begin', begin)
 
-            this.createPathElement((el) => {
-              const animation = el.firstElementChild
-              const begin = (Date.now() - this.start) / 1000
-              el.lastElementChild.setAttribute('begin', begin)
-              animation.setAttribute('begin', begin)
-              animation.setAttribute('from', this.steps[stepIndex - 1])
-              animation.setAttribute('to', this.steps[stepIndex])
-            })
+              this.lastAnimationBegin = Date.now()
+              this.curStep = stepIndex
+            }
+            
+            if(stepIndex === this.steps.length - 1) {
+              document.getElementById('background-animation').setAttribute('begin', begin)
+            }
           }
         }
 
@@ -167,18 +175,9 @@
 
           return radians
         }
-
-        /**
-         * @param {function} mutator - takes in the animation element for mutations before adding it to the svg
-        */
-        createPathElement(mutator = el => el) {
-          const el = document.getElementById('path-template').cloneNode(true)
-          mutator(el)
-          requestAnimationFrame(() => document.getElementById('background-svg').append(el))
-        }
       }
 
-      const loadingAnimation = new PathDrawer(20, 15)
+      const loadingAnimation = new PathDrawer(20, 20)
 
       const enter = () => {
         document.getElementById('loading').style.display = 'none'
@@ -192,7 +191,6 @@
 
       AsyncLoader.addEventListener('complete', () => {
         document.getElementById('enter-btn').style.display = 'block'
-        document.getElementById('background-rect').setAttribute('fill', 'black')
       })
     </script>
   </body>
