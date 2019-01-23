@@ -1,12 +1,48 @@
-class ProgressTracker extends EventTarget {
+class AsyncLoader extends EventTarget {
+
   private total = 0
   private loaded = 0
   private initialFileLoadCountdown = 1
   private finalFileLoadCountdown = 1
 
-  constructor(private numFiles: number = 1) { 
+  constructor(private files: string[], options) { 
     super()
-    this.initialFileLoadCountdown = this.finalFileLoadCountdown = numFiles
+    this.initialFileLoadCountdown = this.finalFileLoadCountdown = files.length
+    if(options.load) {
+      this.load()
+    }
+  }
+
+  load() {
+    const xhrs = this.files.map((file: string) => {
+      const xhr = new XMLHttpRequest()
+      xhr.onprogress = this.createProgressEventHandler()
+    
+      xhr.onreadystatechange = () => {
+        if(xhr.readyState === XMLHttpRequest.DONE) {
+          this.fileDownloaded()
+        }
+      }
+    
+      xhr.open('GET', '/' + file)
+      xhr.send()
+      return xhr;
+    });
+    
+    this.addEventListener('download-complete', () => {
+      for(let i = 0; i < this.files.length; i++) {
+        if(/\.js$/.test(this.files[i])) {
+          this.injectScript(xhrs[i])
+        } else if(/\.css$/.test(this.files[i])) {
+          this.injectCSS(xhrs[i])
+        }
+      }
+    
+      // Add script to determine when the browser finishes parsing the new files
+      const script = document.createElement('script')
+      script.innerHTML = 'AsyncLoader.dispatchEvent(new Event(\'complete\'))'
+      document.body.appendChild(script)
+    })
   }
 
   createProgressEventHandler() {
@@ -41,51 +77,18 @@ class ProgressTracker extends EventTarget {
       this.dispatchEvent(new Event('download-complete'))
     }
   }
-}
 
-const injectScript = (xhr: XMLHttpRequest) => {
-  const script = document.createElement('script')
-  script.innerHTML = xhr.responseText
-  document.body.appendChild(script)
-}
-
-const injectCSS = (xhr: XMLHttpRequest) => {
-  const style = document.createElement('style')
-  style.innerHTML = xhr.responseText
-  document.head.appendChild(style)
-}
-
-const files = ['async-loader-file-list']
-
-const tracker = new ProgressTracker(files.length);
-window['AsyncLoader'] = tracker;
-
-const xhrs = files.map((file: string) => {
-  const xhr = new XMLHttpRequest()
-  xhr.onprogress = tracker.createProgressEventHandler()
-
-  xhr.onreadystatechange = () => {
-    if(xhr.readyState === XMLHttpRequest.DONE) {
-      tracker.fileDownloaded()
-    }
+  injectScript(xhr: XMLHttpRequest) {
+    const script = document.createElement('script')
+    script.innerHTML = xhr.responseText
+    document.body.appendChild(script)
   }
-
-  xhr.open('GET', '/' + file)
-  xhr.send()
-  return xhr;
-});
-
-tracker.addEventListener('download-complete', () => {
-  for(let i = 0; i < files.length; i++) {
-    if(/\.js$/.test(files[i])) {
-      injectScript(xhrs[i])
-    } else if(/\.css$/.test(files[i])) {
-      injectCSS(xhrs[i])
-    }
+  
+  injectCSS(xhr: XMLHttpRequest) {
+    const style = document.createElement('style')
+    style.innerHTML = xhr.responseText
+    document.head.appendChild(style)
   }
+}
 
-  // Add script to determine when the browser finishes parsing the new files
-  const script = document.createElement('script')
-  script.innerHTML = `AsyncLoader.dispatchEvent(new Event('complete'))`
-  document.body.appendChild(script)
-})
+window['AsyncLoader'] = new AsyncLoader(['async-loader-file-list'], { load: true })

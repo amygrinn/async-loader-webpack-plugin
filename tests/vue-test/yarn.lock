@@ -697,10 +697,10 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@tygr/async-loader-webpack-plugin@1.0.2-beta":
-  version "1.0.2-beta"
-  resolved "https://registry.yarnpkg.com/@tygr/async-loader-webpack-plugin/-/async-loader-webpack-plugin-1.0.2-beta.tgz#9a6b8ebb2b0fb83d42e331deb838a7d51b297a79"
-  integrity sha512-kvrm+Ap/uzZlTwB5ZXK42SyoLPXYUlBhHs7XhkBtGfwHLqaDOrv6XD/wknCcb34oWK/gqDAO/g6pe0CgjR9WGg==
+"@tygr/async-loader-webpack-plugin@^1.0.1-beta":
+  version "1.0.1-beta"
+  resolved "https://registry.yarnpkg.com/@tygr/async-loader-webpack-plugin/-/async-loader-webpack-plugin-1.0.1-beta.tgz#6065b706990a1818ff3c9b783a4762f878bf12bf"
+  integrity sha512-7SsV9TaVOe/+4xIMoSMxmKRVaRFCCvvVcd9O2tvb35pe5Vz1nqOiZHq5UXlnDKFUwIa0GhGN8V8X7gSdO1E4Jg==
 
 "@types/blob-util@1.3.3":
   version "1.3.3"

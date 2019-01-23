@@ -4,7 +4,8 @@ module.exports = {
   configureWebpack: {
     plugins: [ new AsyncLoader({
       chunks: ['app', 'chunk-vendors'],
-      files: ['night.jpg']
+      files: ['night.jpg'],
+      load: false
     }) ]
   },
   chainWebpack: config => {

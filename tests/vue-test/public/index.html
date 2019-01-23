@@ -36,6 +36,12 @@
         border: none;
         font-size: 20px;
       }
+      #load-btn {
+        background: none;
+        border: none;
+        font-size: 20px;
+        margin-top: 100px;
+      }
     </style>
   </head>
   <body>
@@ -55,7 +61,9 @@
       <div id="loading-info">
         <h3 id="loading-text">Loading ...</h3>
         <button id="enter-btn" onclick="enter()" style="display: none;">Enter</button>
+        <button id="load-btn" onclick="load()">Load Site</button>
       </div>
+
     </div>
     <div id="app"></div>
 
@@ -178,6 +186,8 @@
       }
 
       const loadingAnimation = new PathDrawer(20, 20)
+
+      const load = () => AsyncLoader.load()
 
       const enter = () => {
         document.getElementById('loading').style.display = 'none'

@@ -38,6 +38,11 @@ export type AsyncLoaderOptions = {
    * name for the script here
    */
   scriptName: string
+
+  /**
+   * Choose whether or not to load files immediately or wait until AsyncLoader.load() is called
+   */
+  load: boolean
 }
 
 const readFile: (filename: string) => Promise<string> = 
@@ -57,9 +62,10 @@ class AsyncLoader implements Plugin {
     patterns,
     files = [],
     extensions = ['css', 'js'],
-    scriptName = 'async-loader'
+    scriptName = 'async-loader',
+    load = true
   }: AsyncLoaderOptions) {
-    this.options = { chunks, patterns, files, extensions, scriptName } 
+    this.options = { chunks, patterns, files, extensions, scriptName, load } 
   }
 
   private options: AsyncLoaderOptions
@@ -108,10 +114,10 @@ class AsyncLoader implements Plugin {
 
       let scriptSource = await readFile(script)
 
-      // Add filenames from 'shouldEmit' hook to async-loader script
+      // Add filenames from 'shouldEmit' hook to async-loader script and add options
       scriptSource = scriptSource.replace(
-        /['|"]async-loader-file-list['|"]/, 
-        `'${this.filesToLoad.join("','")}'`
+        /\[['"]async-loader-file-list['"]\],\s*{\s*load:\s*[^}]+}/, 
+        `['${this.filesToLoad.join("','")}'], { load: ${this.options.load} }`
       )
 
       // Write script to output folder, call callback (cb) on finish

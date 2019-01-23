@@ -23,6 +23,7 @@ When using async-loader-webpack-plugin, an object named `AsyncLoader` is exposed
 | files      | string[]   | `[]`             | Choose files manually using a list of strings, each one will be attempted to load asynchronously regardless of whether or not it is emitted by webpack                 |
 | extensions | string[]   | `['css', 'js']`  | Specify which extensions you would like to load asynchronously. Files specified by 'files' option ignores this option                                                  |
 | scriptName | string     | `'async-loader'` | AsyncLoader will put a script named 'async-loader.js' in your output directory and add it into HTMLWebpackPlugin. You may specify a different name for the script here |
+| load       | boolean    | `true`           | Choose whether or not to load files immediately or wait until AsyncLoader.load() is called                                                                             |
 
 **`chunks` and `patterns` are mutually exlusive, use one or the other**
 
@@ -30,11 +31,18 @@ When using async-loader-webpack-plugin, an object named `AsyncLoader` is exposed
 
 AsyncLoader will be injected into the browser globally. To listen to an event from AsyncLoader, call `AsyncLoader.addEventListener(<event-name>, <handler>)`. Access event parameters in your handler by calling `ev.detail.<parameter>`
 
-| event             | paramters                       | description                                                               |
+| event             | parameters                       | description                                                               |
 | :---------------- | :------------------------------ | :------------------------------------------------------------------------ |
 | progress          | 'percentage', 'loaded', 'total' | Called every time a progress event is recorded while downloading files    |
 | download-complete | none                            | Called when all files have finished downloading                           |
 | complete          | none                            | Called after files have finished being injected and parsed by the browser |
+
+## AsyncLoader functions
+
+| name | parameters | description                                                                                     |
+| :--- | :--------- | :---------------------------------------------------------------------------------------------- |
+| load |            | Load all scripts and inject them. Called immediately by default if `load` option is set to true |
+
 ## Setup
 
 You will want to edit the HtmlWebpackPlugin options to exclude the chunks you specify in the AsyncLoader plugin. It's also required that you do not sort the chunks by specifying `chunksSortMode: 'none'`. You'll also want to inject the scripts in the head so they will be available to you in the body using `inject: 'head'`.
@@ -101,7 +109,7 @@ Inside the index.html template file is where you should hook into the AsyncLoade
   ...
   <body>
     <div id="app"></div>
-    <!-- Use the AsyncLoader object (already injected as a global object by the plugin) here>
+    <!-- Use the AsyncLoader object (already injected as a global object by the plugin) here -->
     <script>
       AsyncLoader.addEventListener('progress', ev => {
         console.log(ev.detail.percentage)
@@ -134,7 +142,7 @@ Then, in your `public/index.html`, wait for a complete event to show the enter b
 <html>
   ...
   <body>
-    <button id="enter-btn" style="display: none;" onclick="enterApp()>Enter</button>
+    <button id="enter-btn" style="display: none;" onclick="enterApp()">Enter</button>
     <div id="app"></div>
     <script>
       AsyncLoader.addEventListener('complete', () => {

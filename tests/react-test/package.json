@@ -112,5 +112,8 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "@tygr/async-loader-webpack-plugin": "^1.1.0-beta"
   }
 }

@@ -901,6 +901,11 @@
     "@svgr/core" "^2.4.1"
     loader-utils "^1.1.0"
 
+"@tygr/async-loader-webpack-plugin@^1.0.1-beta":
+  version "1.0.1-beta"
+  resolved "https://registry.yarnpkg.com/@tygr/async-loader-webpack-plugin/-/async-loader-webpack-plugin-1.0.1-beta.tgz#6065b706990a1818ff3c9b783a4762f878bf12bf"
+  integrity sha512-7SsV9TaVOe/+4xIMoSMxmKRVaRFCCvvVcd9O2tvb35pe5Vz1nqOiZHq5UXlnDKFUwIa0GhGN8V8X7gSdO1E4Jg==
+
 "@types/q@^1.5.1":
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.1.tgz#48fd98c1561fe718b61733daed46ff115b496e18"

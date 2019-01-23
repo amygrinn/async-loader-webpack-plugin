@@ -13,7 +13,7 @@
     "express": "^4.16.4"
   },
   "devDependencies": {
-    "@tygr/async-loader-webpack-plugin": "1.0.2-beta",
+    "@tygr/async-loader-webpack-plugin": "^1.1.0-beta",
     "@types/chai": "^4.1.0",
     "@types/mocha": "^5.2.4",
     "@vue/cli-plugin-babel": "^3.3.0",
