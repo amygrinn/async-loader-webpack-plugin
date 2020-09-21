@@ -1,3 +1,11 @@
+# [DEPRECATED]
+
+I've decided no longer to support this project due to lack of interest.
+
+If anybody is interested in using it please ask me for help at
+
+tylergrinn@gmail.com
+
 # Async Loader Webpack Plugin
 
 # [DEMO](https://async-loader-webpack-plugin.tygr.info)
@@ -84,7 +92,7 @@ module.exports = {
   chainWebpack: config => {
     config
       .plugin('html')
-      .tap(args => [{ 
+      .tap(args => [{
         ...args[0],
         excludeChunks: ['app', 'chunk-vendors'],
         inject: 'head',
